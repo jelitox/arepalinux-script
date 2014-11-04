@@ -18,9 +18,9 @@ rm -f /etc/apt/sources.list.d/*.list
 
 # generate new repositories
 if [ "$REPO_TYPE" == "local" ]; then
-mirror="file://$REPO_URL/debian/"
+	mirror="file://$REPO_URL/debian/"
 else
-mirror="http://$REPO_URL/debian/"
+	mirror="http://$REPO_URL/debian/"
 fi
 
 # oficial repositories
@@ -48,35 +48,28 @@ cat <<EOF > /etc/apt/apt.conf.d/80-update
 Acquire::Check-Valid-Until "false";
 EOF
 
+cat <<EOF > /etc/apt/apt.conf.d/10-Debian
+Acquire::Language "none";
+Acquire::PDiffs  "false";
+APT::Install-Recommends  "false";
+APT::Get::AutomaticRemove  "true";
+APT::Clean-Installed  "true";
+EOF
+
 cat <<EOF > /etc/apt/preferences.d/$SUITE.pref
 Package: *
 Pin: release n=$SUITE
-Pin-Priority: 200
-
-Package: *
-Pin: release n=$SUITE-updates
-Pin-Priority: 999
+Pin-Priority: 300
 
 Package: *
 Pin: release n=$SUITE-backports
-Pin-Priority: 100
+Pin-Priority: 250
+
+Package: *
+Pin: release o=Unofficial Multimedia Packages
+Pin-Priority: 250
 
 EOF
-
-cat <<EOF > /etc/apt/apt.conf.d/10-$DIST
-Acquire::PDiffs "false";
-APT::Default-Release "stable";
-APT::Clean-Installed "true";
-APT::Get:AutomaticRemove "true";
-APT::Get::HideAutoRemove "false";
-APT::Get:Show-Upgraded "true";
-EOF
-
-if [ "$APT_RECOMMENDS" == "yes" ]; then
-cat <<EOF > /etc/apt/apt.conf.d/90-recommends
-APT::Install-Recommends "true";
-EOF
-fi
 
 #
 #  Now that the sources have been setup make sure the system is up to date.
@@ -85,11 +78,18 @@ debug "updating APT database"
 $APT update
 
 # install keyring list
-debug "install Debian keyrings"
-$APT -y install $KEYRINGS
-	
-# update and upgrade system
+debug "Install Debian keyrings"
+aptitude -y -t wheezy install $KEYRINGS
+
+# upgrade system
 debug "upgrade system"
+$APT -y --force-yes install apt
+$APT upgrade
+
+# install tools
+install_package initramfs-tools firmware-linux firmware-linux-free
+
+# update and upgrade system
 $APT upgrade -y
 aptitude -y full-upgrade
 

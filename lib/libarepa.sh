@@ -115,10 +115,10 @@ hooksdir()
 
 roledir()
 {
-		if [ -d "/usr/share/arepalinux/roles.d" ]; then
-			ROLEDIR="/usr/share/arepalinux/roles.d"
+		if [ -d "/usr/share/arepalinux/role.d" ]; then
+			ROLEDIR="/usr/share/arepalinux/role.d"
 		else
-			ROLEDIR="./roles.d"
+			ROLEDIR="./role.d"
 		fi
 }
 
@@ -136,11 +136,6 @@ SUMMARY=$(cat << _MSG
   Distribution : .................. $DIST
   Suite : ......................... $SUITE
   Domain : ........................ $DOMAIN
-  Interface : ..................... $LAN_INTERFACE
-  IP : ............................ $LAN_IPADDR
-  Gateway : ....................... $GATEWAY
-  Netmask : ....................... $NETMASK
-  Network : ....................... $NETWORK
   SSH Port : ...................... $SSH_PORT
  ---------------------------------------------------------------
 _MSG
@@ -306,6 +301,6 @@ mask2cidr() {
 }
 
 get_subnet() {
-	MASK=`get_netmask`
+	MASK=`get_netmask $1`
 	echo $(mask2cidr $MASK)
 }
