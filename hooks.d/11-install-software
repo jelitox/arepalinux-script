@@ -7,15 +7,70 @@
 
 info " Installing basic software and utilities "
 
-$APT -y install sudo locate rsync bash-completion wget tcpdump ntpdate finger links lynx less screen tree curl wget telnet iputils-ping dnsutils lsof patch irqbalance acpi-support lvm2 powermgmt-base
+$APT -y install sudo locate rsync bash-completion wget tcpdump ntpdate finger links lynx less screen tree curl wget telnet iputils-ping dnsutils lsof patch irqbalance acpi-support lvm2 powermgmt-base 
+
+# Basic Utilities
+$APT -y install preload nano vim git make mpg123 libxml2 giflib-tools libpng3 libc6 gcc gcc-multilib g++ g++-multilib cmake lm-sensors hddtemp
+
+if [ "$ENABLE_PPA" == 'yes' ]; then
+# custom Utilities
+$APT -y install elementary-tweaks indicator-brightness indicator-synapse  tlp tlp-rdw 
+fi
+
+if [ "$ENABLE_DOCKER" == 'yes' ]; then
+$APT -y install linux-image-extra-$(uname -r)
+$APT -y install  docker-engine
+fi
+
+if [ "$INSTALL_MULTIMEDIA" == 'yes' ]; then
+# multimedia Utilities
+$APT -y install ubuntu-restricted-extras ffmpeg gstreamer0.10-plugins-ugly libavcodec-extra-54 libvdpau-va-gl1 libmad0 mpg321 gstreamer1.0-libav
+fi
+
+if [ "$INSTALL_COMPRESSION" == 'yes' ]; then
+# compresions Utilities
+$APT -y install rar unrar p7zip p7zip-full p7zip-rar unace zip unzip bzip2 arj lhasa lzip xz-utils
+fi
+
+if [ "$INSTALL_JAVA" == 'yes' ]; then
+#Install Java 
+$APT -y install oracle-java9-installer 
+fi
+
+if [ "$INSTALL_LIBREOFFICE" == 'yes' ]; then
+#Install LibreOffice Suites
+$APT -y install libreoffice libreoffice-gtk libreoffice-style-sifr
+fi
+
+if [ "$INSTALL_BROWSERS" == 'yes' ]; then
+#Install Additional Web Browser
+$APT -y install chromium-browser firefox
+fi
+
+if [ "$INSTALL_TORRENTS" == 'yes' ]; then
+#Install Torrent Client
+$APT -y install transmission 
+fi
+if [ "$INSTALL_GRAPHICS" == 'yes' ]; then
+#Install Graphic Editor
+$APT -y install gimp inkscape
+fi
+if [ "$INSTALL_CHATS" == 'yes' ]; then
+#Install Pidgin and Skype
+$APT -y install skype pidgin
+fi
+
+
+
+
 
 # disable exim4
-aptitude -y purge exim4 exim4-daemon-light
+#aptitude -y purge exim4 exim4-daemon-light
 
 # configure postfix for local system
-install_package postfix
+#install_package postfix
 
-if [ -z "`grep 'inet_protocols' /etc/postfix/main.cf`" ]; then
-	echo 'inet_protocols = ipv4' >> /etc/postfix/main.cf
-fi
-sed -i -e "s/smtpd_banner.*$/smtpd_banner = $SERVERNAME ESMTP $DOMAIN/" /etc/postfix/main.cf
+#if [ -z "`grep 'inet_protocols' /etc/postfix/main.cf`" ]; then
+#	echo 'inet_protocols = ipv4' >> /etc/postfix/main.cf
+#fi
+#sed -i -e "s/smtpd_banner.*$/smtpd_banner = $SERVERNAME ESMTP $DOMAIN/" /etc/postfix/main.cf

@@ -192,7 +192,7 @@ kernel.sched_min_granularity_ns = 100000
 kernel.sched_wakeup_granularity_ns = 100000
 
 # For Lynis Compliance
-net.ipv4.conf.default.log_martians = 1
+net.ipv4.conf.default.log_martians = 0
 net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
 net.ipv4.conf.default.accept_source_route = 0

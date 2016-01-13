@@ -60,6 +60,15 @@ deb-src http://ppa.launchpad.net/linrunner/tlp/ubuntu $SUITE main
 E_O_APT
 fi
 
+
+# backport repositories
+if [ "$ENABLE_DOCKER" == "yes" ]; then
+apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D 
+cat <<E_O_APT > /etc/apt/sources.list.d/dockerproject.list
+deb https://apt.dockerproject.org/repo ubuntu-trusty main
+E_O_APT
+fi
+
 # backport repositories
 if [ "$ENABLE_BACKPORTS" == "yes" ]; then
 cat <<E_O_APT > /etc/apt/sources.list.d/backports.list
@@ -123,7 +132,12 @@ Pin-Priority: 300
 Package: *
 Pin: release n=$SUITE-backports
 Pin-Priority: 250
-EOF
+EOF$APT -y install 
+
+Debug "Activate i386 architecture"
+
+dpkg --add-architecture i386
+$APT -y install binutils-multiarch libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386 libcanberra-pulse:i386 libldap-2.4-2:i386 libpulse0:i386 libxml2:i386 libpng3:i386
 
 debug "Updating APT database"
 $APT -y update
