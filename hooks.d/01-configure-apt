@@ -132,7 +132,8 @@ Pin-Priority: 300
 Package: *
 Pin: release n=$SUITE-backports
 Pin-Priority: 250
-EOF$APT -y install 
+EOF
+$APT -y install 
 
 Debug "Activate i386 architecture"
 
@@ -146,6 +147,7 @@ $APT -y update
 #  Now that the sources have been setup make sure the system is up to date.
 #
 # install keyring list ####
+
 debug "Installing Debian/Ubuntu Keyrings"
 $APT -y install $KEYRINGS
 
@@ -153,5 +155,5 @@ $APT -y install $KEYRINGS
 # upgrade system
 debug "Upgrading System"
 $APT -y --force-yes install apt
-$APT -y upgrade
+$APT -y upgrade 
 $APT -y --force-yes install aptitude
