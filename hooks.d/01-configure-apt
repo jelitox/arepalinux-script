@@ -18,9 +18,9 @@ rm -f /etc/apt/sources.list.d/*.list
 
 # generate new repositories
 if [ "$REPO_TYPE" == "local" ]; then
-	mirror="file://$REPO_URL/debian/"
+	mirror="file://$REPO_URL/ubuntu/"
 else
-	mirror="http://$REPO_URL/debian/"
+	mirror="http://$REPO_URL/ubuntu/"
 fi
 
 # oficial repositories
@@ -29,11 +29,34 @@ cat <<E_O_APT > /etc/apt/sources.list.d/$SUITE.list
 deb $mirror $SUITE $REPO_SECTIONS
 E_O_APT
 
-# devuan repositories
-if [ "$ENABLE_DEVUAN" == "yes" ]; then
-cat <<E_O_APT > /etc/apt/sources.list.d/devuan.list
-# Devuan
-deb http://packages.devuan.org/devuan/ $SUITE $REPO_SECTIONS
+# PPA repositories
+if [ "$ENABLE_PPA" == "yes" ]; then
+cat <<E_O_APT > /etc/apt/sources.list.d/ppa.list
+# PPA
+#PPA elementary-tweaks
+deb http://ppa.launchpad.net/mpstark/elementary-tweaks-daily/ubuntu $SUITE main 
+deb-src http://ppa.launchpad.net/mpstark/elementary-tweaks-daily/ubuntu $SUITE main 
+
+#PPA Indicadores de Unity
+deb http://ppa.launchpad.net/indicator-brightness/ppa/ubuntu $SUITE main 
+deb-src http://ppa.launchpad.net/indicator-brightness/ppa/ubuntu $SUITE main
+
+#PPA Install Multimedia Codecs and Enable DVD Playback
+deb http://ppa.launchpad.net/mc3man/trusty-media/ubuntu trusty main 
+deb-src http://ppa.launchpad.net/mc3man/trusty-media/ubuntu trusty main 
+
+#PPA Java
+deb http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu $SUITE main 
+deb-src http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu $SUITE main 
+
+#PPA Indicator Synapse
+deb http://ppa.launchpad.net/elementary-os/stable/ubuntu $SUITE main 
+deb-src http://ppa.launchpad.net/elementary-os/stable/ubuntu $SUITE main 
+
+#PPA For Laptop : Install TLP for Improve Battery Life and Reduce Overheating
+deb http://ppa.launchpad.net/linrunner/tlp/ubuntu $SUITE main 
+deb-src http://ppa.launchpad.net/linrunner/tlp/ubuntu $SUITE main 
+
 E_O_APT
 fi
 
@@ -42,19 +65,15 @@ if [ "$ENABLE_BACKPORTS" == "yes" ]; then
 cat <<E_O_APT > /etc/apt/sources.list.d/backports.list
 deb $mirror $SUITE-backports $REPO_SECTIONS
 E_O_APT
-cat <<E_O_APT >> /etc/apt/sources.list.d/devuan.list
-# Devuan Backports
-deb http://packages.devuan.org/devuan/ $SUITE-backports main
-E_O_APT
 fi
 
 if [ "$ENABLE_REMOTE" == "yes" ]; then
 # security and update repositories
 cat <<E_O_APT > /etc/apt/sources.list.d/remote.list
 # oficial
-deb http://$REMOTE_REPO/debian/ $SUITE main contrib non-free
+deb http://$REMOTE_REPO/ubuntu/ $SUITE $REPO_SECTIONS
 # updates
-deb http://$REMOTE_REPO/debian/ $SUITE-updates main
+deb http://$REMOTE_REPO/ubuntu/ $SUITE-updates $REPO_SECTIONS 
 E_O_APT
 # lowest priority to remote repository
 cat <<EOF > /etc/apt/preferences.d/remote.pref
@@ -68,7 +87,7 @@ if [ "$APT_UPDATES" == "yes" ]; then
 # security and update repositories
 cat <<E_O_APT > /etc/apt/sources.list.d/updates.list
 # updates
-deb $mirror $SUITE-updates main
+deb $mirror $SUITE-updates $REPO_SECTIONS
 E_O_APT
 fi
 
@@ -76,7 +95,7 @@ if [ "$APT_SECURITY" == "yes" ]; then
 # security and update repositories
 cat <<E_O_APT > /etc/apt/sources.list.d/security.list
 # security
-deb http://security.debian.org/ $SUITE/updates main
+deb http://security.ubuntu.com/ $SUITE-security $REPO_SECTIONS
 E_O_APT
 fi
 
@@ -84,7 +103,7 @@ cat <<EOF > /etc/apt/apt.conf.d/80-update
 Acquire::Check-Valid-Until "false";
 EOF
 
-cat <<EOF > /etc/apt/apt.conf.d/10-Debian
+cat <<EOF > /etc/apt/apt.conf.d/10-Ubuntu
 Acquire::Language "none";
 Acquire::PDiffs  "false";
 APT::Install-Recommends  "false";
@@ -106,22 +125,6 @@ Pin: release n=$SUITE-backports
 Pin-Priority: 250
 EOF
 
-if [ "$ENABLE_DEVUAN" == "yes" ]; then
-cat <<EOF > /etc/apt/preferences.d/devuan.pref
-Package: *
-Pin: release o=Devuan
-Pin-Priority: 700
-
-Package: *
-Pin: origin packages.devuan.org
-Pin-Priority: 700
-
-Package: *
-Pin: release o=Debian
-Pin-Priority: 500
-EOF
-fi
-
 debug "Updating APT database"
 $APT -y update
 
@@ -129,14 +132,9 @@ $APT -y update
 #  Now that the sources have been setup make sure the system is up to date.
 #
 # install keyring list ####
-debug "Installing Debian Keyrings"
+debug "Installing Debian/Ubuntu Keyrings"
 $APT -y install $KEYRINGS
 
-if [ "$ENABLE_DEVUAN" == "yes" ]; then
-	debug "Install Devuan keyring"
-	$APT -y --force-yes install devuan-keyring
-	$APT -y update
-fi
 
 # upgrade system
 debug "Upgrading System"

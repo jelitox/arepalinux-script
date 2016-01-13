@@ -4,40 +4,31 @@
 # This script remove systemd and install sysvinit
 #
 
-info " Removing Systemd utilities "
+info " Install Graphics Card & utilities "
 
-# first, disable systemd from apt
-cat <<EOF > /etc/apt/preferences.d/systemd.pref
-Package: systemd-sysv
-Pin: release o=Debian
-Pin-Priority: -1
 
-Package: systemd
-Pin: origin ""
-Pin-Priority: -1
+# remove xserver-xorg-video-nouveau
+if [ -n "`dpkg -l | grep -i 'xserver-xorg-video-nouveau'`" ]; then
+    $APT remove --purge --auto-remove xserver-xorg-video-nouveau 
+fi
 
-Package: *systemd*
-Pin: origin ""
-Pin-Priority: -1
-EOF
+# remove xserver-xorg-video-intel
+if [ -n "`dpkg -l | grep -i 'xserver-xorg-video-intel'`" ]; then
+    $APT remove --purge --auto-remove xserver-xorg-video-intel
+fi
 
 # update apt database
 $APT -y update
 
-if [ ! -z "`dpkg -l | grep -i 'systemd-sysv'`" ]; then
+if [ ! -z "`dpkg -l | grep -i 'bumblebee-nvidia'`" ]; then
 
-  # install the SysV init packages
-  $APT -y install sysvinit-core sysvinit sysvinit-utils
-
-  # start with sysvinit
-  $SED -i -e "s/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"init=\/sbin\/init\"/" /etc/default/grub
-
-  update-grub2
+  # install the nvidia and primus libs and drivers packages
+  $APT -y install bumblebee-nvidia primus primus-libs:i386 xserver-xorg-video-intel libtxc-dxtn-s2tc0 libtxc-dxtn-s2tc-bin libtxc-dxtn-s2tc0:i386 nvidia-cg-toolkit mesa-utils mesa-utils-extra libegl1-mesa libegl1-mesa-drivers libgl1-mesa-dri libglapi-mesa libgles1-mesa libgles2-mesa libglu1-mesa libopenvg1-mesa mesa-vdpau-drivers libtxc-dxtn-s2tc0 libtxc-dxtn-s2tc-bin uuid-runtime libegl1-mesa:i386 libegl1-mesa-drivers:i386 libgl1-mesa-dri:i386 libglapi-mesa:i386 libgles1-mesa:i386 libgles2-mesa:i386 libglu1-mesa:i386 libopenvg1-mesa:i386 mesa-vdpau-drivers:i386 libtxc-dxtn-s2tc0:i386
 
 WARN=$(cat << _MSG
- ---------- [ Removing systemd ] ---------------
+ ---------- [ Removing legacy Drivers Nvidia /Intel ] ---------------
 
-  we are removing systemd-* from this system, 
+  we are removing graphics drivers legacy from this system, 
   we need to restart for apply changes.
 
   please restart the installation when complete.
@@ -51,16 +42,5 @@ reboot
 
 fi
 
-# remove systemd
-if [ -n "`dpkg -l | grep -i 'systemd-sysv'`" ]; then
-    $APT remove --purge --auto-remove systemd systemd-sysv
-fi
 
-#re-install bsdutils (devuan version)
-version=$(apt-cache policy bsdutils | grep devuan1 | tail -n1 | awk '{ print $2}')
-$APT -y install bsdutils=$version
-$APT remove --purge --auto-remove -y libsystemd0
-
-
-debug "Systemd was removed from this system!"
-
+debug "Nvidia Optimus Graphics Cards was installed on this system!"

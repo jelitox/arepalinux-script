@@ -6,7 +6,7 @@
 #
 ##
 
-VERSION='0.1'
+VERSION='0.2'
 
 
 ## functions 
@@ -152,7 +152,7 @@ sshport=$(cat /etc/ssh/sshd_config | grep Port | cut -d ' ' -f2)
 SUMMARY=$(cat << _MSG
  ---------- [ Status of Installation ] ---------------
 
-  Mode : .......................... Server
+  Mode : .......................... Workstation
   Name : .......................... $NAME
   ServerName : .................... $SERVERNAME
   SSH Port : ...................... $sshport
@@ -223,7 +223,7 @@ get_suite()
 # install package with no prompt and default options
 install_package()
 {
-	message "installing Debian package $@"
+	message "installing Ubuntu package $@"
 	#
 	# Install the packages
 	#

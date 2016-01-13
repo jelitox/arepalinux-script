@@ -1,23 +1,21 @@
-ArepaLinux Script version 0.1
------------------------------
+ArepaLinux Script Elementary version 0.1
+-----------------------------------------
 
-ArepaLinux script is a Debian-based script for automated installation of basic
-servers, appliances y high-end Debian workstations.
+ArepaLinux script elementary is a Elementary OS-based script for automated installation of high-end Laptops & Workstations.
 
-installs, configures and optimizes a Debian system in a few minutes.
+installs, configures and optimizes a Elementary OS system in a few minutes.
 
 Features
 --------
 
-- Installs a Debian Jessie (last stable) system
-- Clean of all systemd- related packages using Devuan packages
+- Installs a Elementary OS  (last stable) system
 
 Dependencies
 ------------
 
-ArepaLinux Script require a Debian netinstall basic with this partition schema:
+ArepaLinux Script require a Elementary OS basic with this partition schema:
 
-- Basic Debian netinstall
+- Basic Elementary OS
 
 = Partition Schema
 - /boot (Primary, 512MB, ext2|ext3|ext4, active)

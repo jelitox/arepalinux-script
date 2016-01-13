@@ -2,12 +2,15 @@
 # ================================================================================
 # Arepa Linux: Build and optimize a Server-Based Debian GNU/Linux appliance
 # Lite Version: Only install Workstation full-mode in Debian Testing
+# Elementary Version: Only install Workstation and Laptops full-mode in Elementary OS
 #
 # Copyright © 2013 Jesús Lara Giménez (phenobarbital) <jesuslarag@gmail.com>
 # Version: 0.1  
 #
 #    Developed by Jesus Lara (phenobarbital) <jesuslara@phenobarbital.info>
 #    https://github.com/phenobarbital/arepalinux-script
+#    Extended by Javier León (jelitox) <jel1284@gmail.com>
+#    https://github.com/jelitox/arepalinux-script
 #    
 #    License: GNU GPL version 3  <http://gnu.org/licenses/gpl.html>.
 #    This is free software: you are free to change and redistribute it.
@@ -104,9 +107,9 @@ help() {
 	usage
 cat <<EOF
 
-This script is a helper to install a Debian GNU/Linux Server-Oriented
+This script is a helper to install a Elementary OS Desktop & Laptop Workstation-Oriented
 
-Automate, Secure and easily install a Debian Enterprise-ready Server/Workstation
+Automate, Secure and easily install a Elementary OS personal-ready Workstation
 
 Options:
   -n, --hostname             specify the name of the debian server
@@ -200,7 +203,7 @@ main()
 {
 	
 		
-## discover Debian suite (ex: wheezy)
+## discover OS suite (ex: freya)
 if [ -z "$SUITE" ]; then
 	if [ ! -z $(which lsb_release) ]; then
 		SUITE=`get_suite`
@@ -209,7 +212,7 @@ if [ -z "$SUITE" ]; then
 	fi
 fi
 
-DIST="Debian"
+DIST="Elementary OS"
 
 	# si no pasamos ningun parametro
 	if [ $# = 0 ]; then
