@@ -33,7 +33,7 @@ EOF
 fi
 
 # blacklist pc speaker
-echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf
+#echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf
 
 
 # install firmware free and non-free

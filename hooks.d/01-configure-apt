@@ -100,7 +100,6 @@ deb $mirror $SUITE-updates $REPO_SECTIONS
 E_O_APT
 fi
 
-#VERIFICAR REPOSITORIOS DE SEGURIDAD
 if [ "$APT_SECURITY" == "yes" ]; then
 # security and update repositories
 cat <<E_O_APT > /etc/apt/sources.list.d/security.list

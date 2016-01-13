@@ -10,7 +10,7 @@ info " Installing basic software and utilities "
 $APT -y install sudo locate rsync bash-completion wget tcpdump ntpdate finger links lynx less screen tree curl wget telnet iputils-ping dnsutils lsof patch irqbalance acpi-support lvm2 powermgmt-base 
 
 # Basic Utilities
-$APT -y install preload nano vim git make mpg123 libxml2 giflib-tools libpng3 libc6 gcc gcc-multilib g++ g++-multilib cmake lm-sensors hddtemp
+$APT -y install preload nano guake terminator git make mpg123 libxml2 giflib-tools libpng3 libc6 gcc gcc-multilib g++ g++-multilib cmake lm-sensors hddtemp
 
 if [ "$ENABLE_PPA" == 'yes' ]; then
 # custom Utilities
@@ -24,7 +24,7 @@ fi
 
 if [ "$INSTALL_MULTIMEDIA" == 'yes' ]; then
 # multimedia Utilities
-$APT -y install ubuntu-restricted-extras ffmpeg gstreamer0.10-plugins-ugly libavcodec-extra-54 libvdpau-va-gl1 libmad0 mpg321 gstreamer1.0-libav
+$APT -y install ubuntu-restricted-extras ffmpeg gstreamer0.10-plugins-ugly libavcodec-extra-54 libvdpau-va-gl1 libmad0 mpg321 gstreamer1.0-libav vlc exaile
 fi
 
 if [ "$INSTALL_COMPRESSION" == 'yes' ]; then
