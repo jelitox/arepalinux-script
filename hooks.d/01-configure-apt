@@ -100,11 +100,18 @@ deb $mirror $SUITE-updates $REPO_SECTIONS
 E_O_APT
 fi
 
+#VERIFICAR REPOSITORIOS DE SEGURIDAD
 if [ "$APT_SECURITY" == "yes" ]; then
 # security and update repositories
 cat <<E_O_APT > /etc/apt/sources.list.d/security.list
 # security
-deb http://security.ubuntu.com/ $SUITE-security $REPO_SECTIONS
+deb http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb http://security.ubuntu.com/ubuntu trusty-security universe
+deb-src http://security.ubuntu.com/ubuntu trusty-security universe
+deb http://security.ubuntu.com/ubuntu trusty-security multiverse
+deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
+
 E_O_APT
 fi
 
@@ -138,7 +145,6 @@ $APT -y install
 Debug "Activate i386 architecture"
 
 dpkg --add-architecture i386
-$APT -y install binutils-multiarch libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386 libcanberra-pulse:i386 libldap-2.4-2:i386 libpulse0:i386 libxml2:i386 libpng3:i386
 
 debug "Updating APT database"
 $APT -y update
